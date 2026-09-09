@@ -68,7 +68,7 @@ function renderCommonInfo() {
     setText("sourceSheet", report.sheetName);
     setText("projectCount", report.projects.length);
 
-    /*setText("lastUpdated", report.reportDate);*/
+    setText("reUpdated", report.reportDate);
 }
 
 async function loadVersion() {
