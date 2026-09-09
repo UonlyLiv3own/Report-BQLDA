@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách dự án</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/table.css">
+</head>
+<body data-page="projects">
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">BT</div>
+            <div>
+                <strong>Dashboard 2026</strong>
+                <small>Giải ngân đầu tư công</small>
+            </div>
+        </div>
+
+        <div class="nav-title">Điều hành</div>
+        <nav class="nav-links">
+            <a class="nav-link " href="tong-quan.html">📊 Tổng quan</a>
+            <a class="nav-link active" href="du-an.html">📋 Dự án</a>
+            <a class="nav-link " href="tien-do.html">📈 Tiến độ</a>
+            <a class="nav-link " href="chi-tiet.html">🔎 Chi tiết</a>
+        </nav>
+
+        <div class="nav-title">Hệ thống</div>
+        <a class="nav-link" href="../index.html">⌂ Trang chủ</a>
+
+        <div class="sidebar-footer">
+            Nguồn dữ liệu: BC giải ngân.xlsx<br>
+            Sheet: <span id="sourceSheet">—</span><br>
+            Báo cáo: <span id="reportDate">—</span>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div id="appError" class="card" hidden></div>
+
+        
+<div class="topbar">
+    <div>
+        <h1>Danh sách dự án</h1>
+        <p>Tìm kiếm, lọc và xem thông tin chi tiết từng dự án.</p>
+    </div>
+    <div class="report-badge"><span id="projectCount">—</span> dự án</div>
+</div>
+
+<section class="card">
+    <div class="toolbar">
+        <input class="input" id="searchInput" placeholder="🔍 Nhập tên dự án hoặc mã dự án ...">
+        <select class="select" id="categoryFilter">
+            <option value="all">Tất cả nhóm</option>
+        </select>
+        <select class="select" id="statusFilter">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="good">Đạt tiến độ</option>
+            <option value="warning">Cần theo dõi</option>
+            <option value="bad">Chậm tiến độ</option>
+            <option value="none">Chưa giải ngân</option>
+        </select>
+    </div>
+
+    <div id="projectTable"></div>
+</section>
+
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="module" src="../js/app.js"></script>
+</body>
+</html>

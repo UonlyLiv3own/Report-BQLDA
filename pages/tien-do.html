@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theo dõi tiến độ</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/table.css">
+</head>
+<body data-page="progress">
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">BT</div>
+            <div>
+                <strong>Dashboard 2026</strong>
+                <small>Giải ngân đầu tư công</small>
+            </div>
+        </div>
+
+        <div class="nav-title">Điều hành</div>
+        <nav class="nav-links">
+            <a class="nav-link " href="tong-quan.html">📊 Tổng quan</a>
+            <a class="nav-link " href="du-an.html">📋 Dự án</a>
+            <a class="nav-link active" href="tien-do.html">📈 Tiến độ</a>
+            <a class="nav-link " href="chi-tiet.html">🔎 Chi tiết</a>
+        </nav>
+
+        <div class="nav-title">Hệ thống</div>
+        <a class="nav-link" href="../index.html">⌂ Trang chủ</a>
+
+        <div class="sidebar-footer">
+            Nguồn dữ liệu: BC giải ngân.xlsx<br>
+            Sheet: <span id="sourceSheet">—</span><br>
+            Báo cáo: <span id="reportDate">—</span>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div id="appError" class="card" hidden></div>
+
+        
+<div class="topbar">
+    <div>
+        <h1>Theo dõi tiến độ</h1>
+        <p>Phân loại dự án theo tỷ lệ giải ngân và xác định nhóm cần ưu tiên.</p>
+    </div>
+    <div class="report-badge">Báo cáo: <strong id="reportDate">—</strong></div>
+</div>
+
+<section class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Đạt tiến độ ≥ 70%</div><div class="kpi-value" id="countGood">—</div></div>
+    <div class="kpi"><div class="kpi-label">Cần theo dõi 40-69,99%</div><div class="kpi-value" id="countWarning">—</div></div>
+    <div class="kpi"><div class="kpi-label">Chậm tiến độ &lt; 40%</div><div class="kpi-value" id="countBad">—</div></div>
+    <div class="kpi"><div class="kpi-label">Chưa giải ngân</div><div class="kpi-value" id="countZero">—</div></div>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Tỷ lệ giải ngân theo dự án</h2>
+            <p class="card-description">Biểu đồ sử dụng dữ liệu thực tế từ Báo cáo giải ngân 31-07-2026.</p>
+        </div>
+    </div>
+    <div class="chart-wrap"><canvas id="rateChart"></canvas></div>
+</section>
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Danh sách 10 dự án có tỷ lệ thấp nhất</h2>
+            <p class="card-description">Dùng làm danh sách ưu tiên theo dõi.</p>
+        </div>
+    </div>
+    <ul class="rank-list" id="slowProjects"></ul>
+</section>
+
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="module" src="../js/app.js"></script>
+</body>
+</html>

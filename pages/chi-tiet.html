@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết dự án</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/table.css">
+</head>
+<body data-page="detail">
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">BT</div>
+            <div>
+                <strong>Dashboard 2026</strong>
+                <small>Giải ngân đầu tư công</small>
+            </div>
+        </div>
+
+        <div class="nav-title">Điều hành</div>
+        <nav class="nav-links">
+            <a class="nav-link " href="tong-quan.html">📊 Tổng quan</a>
+            <a class="nav-link " href="du-an.html">📋 Dự án</a>
+            <a class="nav-link " href="tien-do.html">📈 Tiến độ</a>
+            <a class="nav-link active" href="chi-tiet.html">🔎 Chi tiết</a>
+        </nav>
+
+        <div class="nav-title">Hệ thống</div>
+        <a class="nav-link" href="../index.html">⌂ Trang chủ</a>
+
+        <div class="sidebar-footer">
+            Nguồn dữ liệu: BC giải ngân.xlsx<br>
+            Sheet: <span id="sourceSheet">—</span><br>
+            Báo cáo: <span id="reportDate">—</span>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div id="appError" class="card" hidden></div>
+
+        
+<div class="topbar">
+    <div>
+        <h1 id="detailTitle">Thông tin chi tiết dự án</h1>
+        <p>Mã dự án: <strong id="detailCode">—</strong> — Nhóm: <strong id="detailCategory">—</strong></p>
+    </div>
+    <a class="btn btn-back" href="du-an.html">← Quay lại danh sách</a>
+</div>
+
+<section id="detailContent">
+    <div class="card">
+        <div class="detail-grid">
+            <div class="detail-box"><span>Kế hoạch vốn</span><strong id="detailKHV">—</strong></div>
+            <div class="detail-box"><span>Đã giải ngân</span><strong id="detailPaid">—</strong></div>
+            <div class="detail-box"><span>Tỷ lệ giải ngân</span><strong id="detailRate">—</strong></div>
+            <div class="detail-box"><span>Còn phải giải ngân</span><strong id="detailRemaining">—</strong></div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <section class="card">
+            <h2 class="card-detail">Chi tiết dòng tiền</h2>
+            <div class="info-list">
+                <div class="info-row"><span>Giải ngân kỳ trước</span><strong id="detailPrevious">—</strong></div>
+                <div class="info-row"><span>Giải ngân trong kỳ</span><strong id="detailPeriod">—</strong></div>
+                <div class="info-row"><span>Tỷ lệ so với cam kết</span><strong id="detailCommitRate">—</strong></div>
+                <div class="info-row"><span>Ước chi tháng 8/2026</span><strong id="detailEstimate">—</strong></div>
+                <div class="info-row"><span>Trạng thái</span><strong id="detailStatus" class="status none">—</strong></div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card-detail">Ghi chú</h2>
+            <p id="detailNote" class="muted">—</p>
+        </section>
+    </div>
+</section>
+
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="module" src="../js/app.js"></script>
+</body>
+</html>

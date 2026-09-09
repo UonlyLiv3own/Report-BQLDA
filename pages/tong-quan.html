@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng quan giải ngân 2026</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/table.css">
+</head>
+<body data-page="overview">
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">BT</div>
+            <div>
+                <strong>Dashboard 2026</strong>
+                <small>Giải ngân đầu tư công</small>
+            </div>
+        </div>
+
+        <div class="nav-title">Điều hành</div>
+        <nav class="nav-links">
+            <a class="nav-link active" href="tong-quan.html">📊 Tổng quan</a>
+            <a class="nav-link " href="du-an.html">📋 Dự án</a>
+            <a class="nav-link " href="tien-do.html">📈 Tiến độ</a>
+            <a class="nav-link " href="chi-tiet.html">🔎 Chi tiết</a>
+        </nav>
+
+        <div class="nav-title">Hệ thống</div>
+        <a class="nav-link" href="../index.html">⌂ Trang chủ</a>
+
+        <div class="sidebar-footer">
+            Nguồn dữ liệu: BC giải ngân.xlsx<br>
+            Sheet: <span id="sourceSheet">—</span><br>
+            Báo cáo: <span id="reportDate">—</span>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div id="appError" class="card" hidden></div>
+
+<!--BLOCK 1-->        
+<div class="topbar">
+    <div>
+        <h1>Tổng quan giải ngân</h1>
+        <p>Báo cáo tình hình thực hiện công tác giải ngân vốn đầu tư công.</p>
+    </div>
+    <div class="report-badge">Cập nhật: <strong id="reportDate">— —</strong></div>
+</div>
+
+<section class="kpi-grid">
+    <div class="kpi">
+        <div class="kpi-label">Kế hoạch vốn đã giao năm 2026</div>
+        <div class="kpi-value" id="totalKHV">—</div>
+        <div class="kpi-sub">Đơn vị: tỷ đồng</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Tổng giải ngân</div>
+        <div class="kpi-value" id="totalPaid">—</div>
+        <div class="kpi-sub">Lũy kế đến ngày báo cáo</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Tỷ lệ giải ngân</div>
+        <div class="kpi-value" id="totalRate">—</div>
+        <div class="kpi-sub">So với KHV đã giao</div>
+    </div>
+    <div class="kpi">
+        <div class="kpi-label">Còn phải giải ngân</div>
+        <div class="kpi-value" id="totalRemaining">—</div>
+        <div class="kpi-sub">Theo cột “Số còn phải giải ngân”</div>
+    </div>
+</section>
+<!--BLOCK 2-->
+<div class="grid-2">
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Kế hoạch vốn và giải ngân theo nhóm Dự án</h2>
+                <p class="card-description">Tổng hợp từ các dự án trong sheet báo cáo.</p>
+            </div>
+        </div>
+        <!-- biểu đồ cột so sánh KHV & giải ngân theo nhóm DA -->
+        <div class="chart-wrap"><canvas id="categoryChart"></canvas></div> 
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Tỷ lệ giải ngân</h2>
+                <p class="card-description">So sánh phần đã giải ngân với phần còn lại.</p>
+            </div>
+        </div>
+        <!-- biểu đồ tròn so sánh tỷ lệ đã giải ngân & còn lại -->
+        <div class="chart-wrap small"><canvas id="progressChart"></canvas></div>
+        <div class="progress-value">
+            <span>Đã Giải Ngân</span>
+            <strong id="totalRate">—</strong>
+        </div>
+        <div class="progress-track">
+            <!-- biểu đồ tiến độ tỷ lệ đã giải ngân -->
+            <div class="progress-bar" id="progressBar" style="width:0%"></div>
+        </div>
+    </section>
+</div>
+<!--BLOCK 3-->
+<div class="grid-2">
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Các dự án còn phải giải ngân</h2>
+                <p class="card-description">Dự án có giá trị giải ngân còn lại lớn nhất.</p>
+            </div>
+        </div>
+        <div class="chart-wrap"><canvas id="remainingChart"></canvas></div>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Các dự án đã giải ngân</h2>
+                <p class="card-description">Xếp theo tỷ lệ giải ngân cao nhất.</p>
+            </div>
+        </div>
+        <ul class="rank-list" id="topPaidList"></ul>
+    </section>
+</div>
+<!--BLOCK 4-->
+<div class="grid-2">
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Danh sách các dự án còn lại</h2>
+                <p class="card-description">Ưu tiên theo dõi.</p>
+            </div>
+        </div>
+        <ul class="rank-list" id="topRemainingList"></ul>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">Giải ngân trong kỳ</h2>
+                <p class="card-description">Số giải ngân phát sinh trong tuần báo cáo.</p>
+            </div>
+        </div>
+        <div class="kpi-value" id="periodPaid">—</div>
+        <div class="kpi-sub">triệu đồng</div>
+    </section>
+</div>
+
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="module" src="../js/app.js"></script>
+</body>
+</html>

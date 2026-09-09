@@ -1,0 +1,19 @@
+
+.table-number {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.table-percent {
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable:hover {
+    background: #eef4ff;
+}
