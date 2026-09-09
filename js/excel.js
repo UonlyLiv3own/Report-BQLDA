@@ -1,5 +1,5 @@
 
-const EXCEL_PATH = "../excel/baocao-070826.xlsx";
+const EXCEL_PATH = "../report/baocao-070826.";
 const JSON_PATH = "../data/bao-cao.json";
 const SHEET_NAME = "BAO CAO 31-07-2026";
 
