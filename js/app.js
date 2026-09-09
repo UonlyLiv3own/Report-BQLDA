@@ -19,6 +19,7 @@ let report = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
+        await loadVersion();
         /* Đoạn debug để biết chính xác lỗi nằm ở đâu */
         report = await loadReport();
 
@@ -66,6 +67,41 @@ function renderCommonInfo() {
     setText("reportDate", report.reportDate);
     setText("sourceSheet", report.sheetName);
     setText("projectCount", report.projects.length);
+
+    /*setText("lastUpdated", report.reportDate);*/
+}
+
+async function loadVersion() {
+    try {
+        const response = await fetch("../data/version.json", {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const version = await response.json();
+
+        if (!version.updatedAt) {
+            return;
+        }
+
+        const date = new Date(version.updatedAt);
+
+        const formatted = date.toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            /*hour: "2-digit",
+            minute: "2-digit"       -- hiển thị thêm giờ đổi thành date.toLocaleString(...)*/
+        });
+
+        setText("lastUpdated", formatted);
+
+    } catch (error) {
+        console.warn("Không đọc được version.json:", error);
+    }
 }
 
 function initOverview() {
