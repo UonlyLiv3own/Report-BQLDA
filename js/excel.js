@@ -95,7 +95,8 @@ function normalizeRows(rows) {
             remainingOldRule: numberOrZero(row[36]),
             rateOldRule: typeof row[37] === "number" ? row[37] * 100 : null,
             paidRemaining: numberOrZero(row[39]),
-            note: row[40] == null ? "" : String(row[40]).trim()
+            officer: row[40] == null ? "" : String(row[40]).trim()
+            /* note: row[40] == null ? "" : String(row[40]).trim() */
         });
     }
 

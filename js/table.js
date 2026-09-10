@@ -29,6 +29,7 @@ export function renderProjectTable(container, projects, options = {}) {
                         <th>Giải ngân (tỷ)</th>
                         <th>Tỷ lệ</th>
                         <th>Còn lại (tỷ)</th>
+                        <th>Cán bộ Thụ lý</th>
                         <th>Trạng thái</th>
                         <th></th>
                     </tr>
@@ -45,6 +46,7 @@ export function renderProjectTable(container, projects, options = {}) {
                                 <td class="table-number">${formatBillion(p.paidTotal)}</td>
                                 <td class="table-percent">${formatPercent(p.rateKHV ?? 0)}</td>
                                 <td class="table-number">${formatBillion(p.remaining)}</td>
+                                <td class="muted">${escapeHtml(p.officer || "—")}</td>
                                 <td><span class="status ${status.key}">${status.label}</span></td>
                                 <td>
                                     <button class="btn detail-btn" data-id="${p.id}">Chi tiết</button>

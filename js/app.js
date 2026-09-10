@@ -293,6 +293,7 @@ function initDetail() {
     setText("detailPeriod", `${formatBillion(project.paidPeriod)} tỷ`);
     setText("detailCommitRate", formatPercent(project.rateCommitment ?? 0));
     setText("detailEstimate", `${formatBillion(project.estimateMonth)} tỷ`);
+    setText("detailOfficer", project.officer || "—");
     setText("detailStatus", status.label);
 
     const statusEl = document.getElementById("detailStatus");
