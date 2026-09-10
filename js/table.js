@@ -28,14 +28,14 @@ export function renderProjectTable(container, projects, options = {}) {
                         <th>Giải ngân (tỷ)</th>
                         <th>Tỷ lệ</th>
                         <th>Còn lại (tỷ)</th>
-                        <th>Cán bộ Thụ lý</th>
+                        <th>Cán bộ Kỹ thuật</th>
                         <th>Trạng thái</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     ${pageItems.map(p => {
-                        const status = getStatus(p.rateKHV ?? 0);
+                        const status = getStatus(p.rateKHV ?? 0, p.capitalAdjustment ?? 0);
                         return `
                             <tr>
                                 <td>${p.id}</td>

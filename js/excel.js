@@ -63,7 +63,12 @@ function normalizeRows(rows) {
         const row = rows[i] || [];
         category = findSection(row, category);
 
-        if (!Number.isInteger(row[0]) || !row[1]) continue;
+        // điều kiện dữ liệu hiển thị: STT phải là số thực sự tồn tại, tên dự án phải là chuỗi
+        if (
+            row[0] == null ||
+            row[0] === "" ||
+            !Number.isFinite(Number(row[0])) || !row[1] || typeof row[1] !== "string") { continue;
+        }
 
         const rateKHV = typeof row[26] === "number"
             ? row[26] * 100
@@ -78,6 +83,8 @@ function normalizeRows(rows) {
             name: String(row[1]).trim(),
             code: row[2] == null ? "" : String(row[2]).trim(),
             category,
+            // Cột U - điều chỉnh/giảm vốn
+            capitalAdjustment: numberOrZero(row[20]),
             khv: numberOrZero(row[22]),
             paidPrevious: numberOrZero(row[23]),
             paidPeriod: numberOrZero(row[24]),

@@ -14,9 +14,17 @@ export function calculateRemaining(khv, paid) {
     return Math.max(0, safeNumber(khv) - safeNumber(paid));
 }
 
-export function getStatus(rate) {
+export function getStatus(rate, capitalAdjustment = 0) {
     rate = safeNumber(rate);
 
+    // Ưu tiên trạng thái giảm vốn
+    if (capitalAdjustment < 0) {
+        return {
+            label: "Giảm vốn",
+            key: "reduction"
+        };
+    }
+    // sau đó mới xét đến tiến dộ giải ngân
     if (rate >= 70) {
         return { key: "good", label: "Đạt tiến độ" };
     }
@@ -67,7 +75,7 @@ export function filterProjects(projects, { search = "", category = "all", status
             category === "all" || p.category === category;
 
         const matchStatus =
-            status === "all" || getStatus(p.rateKHV).key === status;
+            status === "all" || getStatus(p.rateKHV, p.capitalAdjustment).key === status;
 
         return matchSearch && matchCategory && matchStatus;
     });

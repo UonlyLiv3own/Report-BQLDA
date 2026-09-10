@@ -202,7 +202,10 @@ function initProjects() {
                 category.value === "all" || p.category === category.value;
 
             const matchStatus =
-                status.value === "all" || getStatus(p.rateKHV ?? 0).key === status.value;
+                status.value === "all" || getStatus(
+                    p.rateKHV ?? 0,
+                    p.capitalAdjustment ?? 0
+                ).key === status.value;
 
             return matchQ && matchCat && matchStatus;
         });
