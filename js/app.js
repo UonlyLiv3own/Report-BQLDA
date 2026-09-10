@@ -19,10 +19,10 @@ let report = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        await loadVersion();
-        /* Đoạn debug để biết chính xác lỗi nằm ở đâu */
+        await loadVersion();        
         report = await loadReport();
 
+        /* Đoạn debug để biết chính xác lỗi nằm ở đâu */
         console.log("========== REPORT ==========");
         console.log(report);
         console.log("source:", report?.source);
@@ -31,12 +31,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("projects:", report?.projects);
         console.log("project count:", report?.projects?.length);
         console.log("============================");
-
+        
         document.body.classList.add("data-loaded");
         /* run web sau đó F12 → Console */
 
         const page = document.body.dataset.page;
 
+        if (page === "landing" || !page) renderLandingInfo(); // Gọi khi ở trang index/landing
         if (page === "overview") initOverview();
         if (page === "projects") initProjects();
         if (page === "progress") initProgress();
@@ -62,13 +63,18 @@ function showGlobalError(message) {
         "Không tải được dữ liệu. Hãy kiểm tra bạn đang chạy bằng Live Server và file Excel nằm trong thư mục excel/. Chi tiết: " +
         message;
 }
+// Hiển thị ngày báo cáo trên trang chủ
+function renderLandingInfo() {     
+    if (document.getElementById("baocao")) {
+        setText("baocao", report.reportDate || "—");
+    }
+}
 
 function renderCommonInfo() {
     setText("reportDate", report.reportDate);
     setText("sourceSheet", report.sheetName);
     setText("projectCount", report.projects.length);
-
-    setText("reUpdated", report.reportDate);
+    setText("reUpdated", report.reportDate || "—");
 }
 
 async function loadVersion() {
@@ -311,10 +317,10 @@ function initDetail() {
     setText("detailPaid", `${formatMillion(project.paidTotal)} tỷ`);
     setText("detailRate", formatPercent(project.rateKHV ?? 0));
     setText("detailRemaining", `${formatMillion(project.remaining)} tỷ`);
-    setText("detailPrevious", `${formatBillion(project.paidPrevious)} tỷ`);
-    setText("detailPeriod", `${formatBillion(project.paidPeriod)} tỷ`);
+    setText("detailPrevious", `${formatMillion(project.paidPrevious)} triệu`);
+    setText("detailPeriod", `${formatMillion(project.paidPeriod)} triệu`);
     setText("detailCommitRate", formatPercent(project.rateCommitment ?? 0));
-    setText("detailEstimate", `${formatBillion(project.estimateMonth)} tỷ`);
+    setText("detailEstimate", `${formatMillion(project.estimateMonth)} triệu`);
     setText("detailOfficer", project.officer || "—");
     setText("detailStatus", status.label);
 
