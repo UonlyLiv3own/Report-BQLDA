@@ -32,9 +32,9 @@ function create(id, config) {
 }
 
 function formatTy(value, maximumFractionDigits = 2) {
-    return `${(Number(value || 0) / 1000).toLocaleString("vi-VN", {
+    return `${(Number(value || 0)).toLocaleString("vi-VN", {    // (Number(value || 0)/1000) tỷ
         maximumFractionDigits
-    })} tỷ`;
+    })} triệu`;
 }
 
 function statusColor(rate) {

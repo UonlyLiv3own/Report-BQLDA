@@ -118,9 +118,9 @@ function initOverview() {
 
     const rate = calculateRate(total.paid, total.khv);
 
-    setText("totalKHV", `${formatBillion(total.khv)} tỷ`);
-    setText("totalPaid", `${formatBillion(total.paid)} tỷ`);
-    setText("totalRemaining", `${formatBillion(total.remaining)} tỷ`);
+    setText("totalKHV", `${formatBillion(total.khv)} Tỷ`);
+    setText("totalPaid", `${formatMillion(total.paid)} Triệu`);
+    setText("totalRemaining", `${formatMillion(total.remaining)} Triệu`);
     setText("totalRate", formatPercent(rate));
     setText("periodPaid", `${formatMillion(total.period)} triệu`);
 
@@ -288,10 +288,10 @@ function initDetail() {
     setText("detailCode", project.code || "—");
     setText("detailCategory", project.category || "—");
 
-    setText("detailKHV", `${formatBillion(project.khv)} tỷ`);
-    setText("detailPaid", `${formatBillion(project.paidTotal)} tỷ`);
+    setText("detailKHV", `${formatMillion(project.khv)} tỷ`);
+    setText("detailPaid", `${formatMillion(project.paidTotal)} tỷ`);
     setText("detailRate", formatPercent(project.rateKHV ?? 0));
-    setText("detailRemaining", `${formatBillion(project.remaining)} tỷ`);
+    setText("detailRemaining", `${formatMillion(project.remaining)} tỷ`);
     setText("detailPrevious", `${formatBillion(project.paidPrevious)} tỷ`);
     setText("detailPeriod", `${formatBillion(project.paidPeriod)} tỷ`);
     setText("detailCommitRate", formatPercent(project.rateCommitment ?? 0));

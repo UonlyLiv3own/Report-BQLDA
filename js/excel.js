@@ -79,7 +79,8 @@ function normalizeRows(rows) {
             : null;
 
         data.push({
-            id: row[0],
+            id: row[2] || `project-${i}`, // lấy mã dự án làm id hệ thống
+            stt: data.length + 1,   // auto render cột STT 
             name: String(row[1]).trim(),
             code: row[2] == null ? "" : String(row[2]).trim(),
             category,

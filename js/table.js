@@ -39,7 +39,7 @@ export function renderProjectTable(container, projects, options = {}) {
                         const status = getStatus(p.rateKHV ?? 0, p.capitalAdjustment ?? 0);
                         return `
                             <tr>
-                                <td>${p.id}</td>
+                                <td>${p.stt}</td>
                                 <td class="project-name">${escapeHtml(p.name)}</td>
                                 <td class="muted">${escapeHtml(p.code)}</td>
                                 <td class="table-number">${formatMillion(p.khv)}</td>

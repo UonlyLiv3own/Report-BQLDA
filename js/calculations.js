@@ -6,7 +6,7 @@ export function safeNumber(value) {
 
 // formatBillion
 export function toBillion(value) {
-    return safeNumber(value) / 1000;
+    return safeNumber(value); // safeNumber(value) / 1000
 }
 
 export function calculateRate(paid, khv) {
@@ -89,8 +89,8 @@ export function filterProjects(projects, { search = "", category = "all", status
 
 export function formatMillion(value) {
     return `${safeNumber(value).toLocaleString("vi-VN", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 3
+        //minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     })}`;
 }
 
