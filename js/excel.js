@@ -1,5 +1,5 @@
 
-const EXCEL_PATH = "../report/baocao-070826.";
+const EXCEL_PATH = "../report/bao-cao.xlsx";
 const JSON_PATH = "../data/bao-cao.json";
 const SHEET_NAME = "BAO CAO 01-08-2026";
 
@@ -116,10 +116,11 @@ export async function loadReportFromExcel() {
     const buffer = await response.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: "array" });
 
-    const sheet = workbook.Sheets[SHEET_NAME];
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
 
     if (!sheet) {
-        throw new Error(`Không tìm thấy sheet "${SHEET_NAME}".`);
+        throw new Error("Không tìm thấy sheet trong file Excel.");
     }
 
     const rows = XLSX.utils.sheet_to_json(sheet, {
@@ -133,7 +134,7 @@ export async function loadReportFromExcel() {
 
     return {
         source: "excel",
-        sheetName: SHEET_NAME,
+        sheetName,
         reportDate,
         unit: "triệu đồng",
         projects
