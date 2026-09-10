@@ -255,40 +255,6 @@
     box-shadow: 0 0 0 3px rgba(37,99,235,.10);
 }
 
-.table-wrap {
-    overflow: auto;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-}
-
-table {
-    width: 100%;
-    min-width: 1050px;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 12px 13px;
-    border-bottom: 1px solid var(--line);
-    text-align: left;
-    vertical-align: middle;
-}
-
-th {
-    background: var(--surface-2);
-    color: #475467;
-    font-size: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}
-
-td {
-    font-size: 13px;
-}
-
-tr:last-child td { border-bottom: 0; }
-
 .project-name {
     max-width: 430px;
     font-weight: 700;

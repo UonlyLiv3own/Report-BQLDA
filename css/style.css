@@ -110,6 +110,11 @@ button, .btn { cursor: pointer; }
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; 
 }
 
+.btn-back { 
+    width: 250px;
+    font-size: 16px;
+    padding: 0;
+ }
 .btn-back:hover { box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; }
 
 .hint {

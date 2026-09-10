@@ -1,7 +1,5 @@
-
 const EXCEL_PATH = "../report/bao-cao.xlsx";
 const JSON_PATH = "../data/bao-cao.json";
-const SHEET_NAME = "BAO CAO 01-08-2026";
 
 function numberOrZero(value) {
     if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -47,7 +45,8 @@ function findSection(row, current) {
         const text = String(b).trim();
         if (
             text.toUpperCase().includes("DỰ ÁN") ||
-            text.toUpperCase().includes("CÔNG TRÌNH")
+            text.toUpperCase().includes("CÔNG TRÌNH") ||
+            text.toUpperCase().includes("DA")
         ) {
             return text;
         }

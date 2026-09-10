@@ -1,4 +1,3 @@
-
 import { getStatus, formatBillion, formatPercent } from "./calculations.js";
 
 export function renderProjectTable(container, projects, options = {}) {
