@@ -233,6 +233,7 @@
 .progress-value span { margin-bottom: 10px;}
 
 .toolbar {
+    /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
     display: flex;
     flex-wrap: wrap;
     gap: 10px;

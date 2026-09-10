@@ -179,16 +179,30 @@ function initProjects() {
     const search = document.getElementById("searchInput");
     const category = document.getElementById("categoryFilter");
     const status = document.getElementById("statusFilter");
+    const officer = document.getElementById("officerFilter");
     const table = document.getElementById("projectTable");
     let page = 1;
-
+    // tạo danh sách nhóm dự án
     const categories = [...new Set(report.projects.map(p => p.category))]
         .filter(Boolean)
         .sort();
+    // tạo danh sách cán bộ
+    const officers = [...new Set(
+        report.projects
+            .map(p => p.officer)
+            .filter(Boolean)
+    )]
+    .sort((a, b) => a.localeCompare(b, "vi"));
 
+    // thêm option cho nhóm DA
     category.innerHTML =
         `<option value="all">Tất cả nhóm</option>` +
         categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+    // thêm option cho ds cán bộ
+    officer.innerHTML =
+        `<option value="all">Tất cả Cán bộ</option>` +
+        officers
+            .map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join("");
 
     function refresh() {
         const filtered = report.projects.filter(p => {
@@ -207,7 +221,11 @@ function initProjects() {
                     p.capitalAdjustment ?? 0
                 ).key === status.value;
 
-            return matchQ && matchCat && matchStatus;
+            const matchOfficer =
+                officer.value === "all" ||
+                p.officer === officer.value;
+
+            return matchQ && matchCat && matchStatus && matchOfficer;
         });
 
         const result = renderProjectTable(table, filtered, {
@@ -237,6 +255,7 @@ function initProjects() {
     search.addEventListener("input", () => { page = 1; refresh(); });
     category.addEventListener("change", () => { page = 1; refresh(); });
     status.addEventListener("change", () => { page = 1; refresh(); });
+    officer.addEventListener("change", () => { page = 1; refresh(); });
 
     refresh();
 }
