@@ -1,4 +1,5 @@
-import { getStatus, formatBillion, formatPercent } from "./calculations.js";
+//import { getStatus, formatBillion, formatPercent } from "./calculations.js";
+import { getStatus, formatMillion, formatPercent } from "./calculations.js";
 
 export function renderProjectTable(container, projects, options = {}) {
     const page = options.page ?? 1;
@@ -24,10 +25,10 @@ export function renderProjectTable(container, projects, options = {}) {
                         <th>STT</th>
                         <th>Tên dự án</th>
                         <th>Mã dự án</th>
-                        <th>KHV (tỷ)</th>
-                        <th>Giải ngân (tỷ)</th>
+                        <th>KHV (Triệu)</th>
+                        <th>Giải ngân (Triệu)</th>
                         <th>Tỷ lệ</th>
-                        <th>Còn lại (tỷ)</th>
+                        <th>Còn lại (Triệu)</th>
                         <th>Cán bộ Kỹ thuật</th>
                         <th>Trạng thái</th>
                         <th></th>
@@ -41,10 +42,10 @@ export function renderProjectTable(container, projects, options = {}) {
                                 <td>${p.id}</td>
                                 <td class="project-name">${escapeHtml(p.name)}</td>
                                 <td class="muted">${escapeHtml(p.code)}</td>
-                                <td class="table-number">${formatBillion(p.khv)}</td>
-                                <td class="table-number">${formatBillion(p.paidTotal)}</td>
+                                <td class="table-number">${formatMillion(p.khv)}</td>
+                                <td class="table-number">${formatMillion(p.paidTotal)}</td>
                                 <td class="table-percent">${formatPercent(p.rateKHV ?? 0)}</td>
-                                <td class="table-number">${formatBillion(p.remaining)}</td>
+                                <td class="table-number">${formatMillion(p.remaining)}</td>
                                 <td class="muted">${escapeHtml(p.officer || "—")}</td>
                                 <td><span class="status ${status.key}">${status.label}</span></td>
                                 <td>

@@ -1,7 +1,12 @@
-
+// formatMillion
 export function safeNumber(value) {
     const n = Number(value);
     return Number.isFinite(n) ? n : 0;
+}
+
+// formatBillion
+export function toBillion(value) {
+    return safeNumber(value) / 1000;
 }
 
 export function calculateRate(paid, khv) {
@@ -81,16 +86,23 @@ export function filterProjects(projects, { search = "", category = "all", status
     });
 }
 
+
 export function formatMillion(value) {
-    return new Intl.NumberFormat("vi-VN", {
-        maximumFractionDigits: 1
-    }).format(safeNumber(value));
+    return `${safeNumber(value).toLocaleString("vi-VN", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3
+    })}`;
 }
 
+
 export function formatBillion(value) {
-    return new Intl.NumberFormat("vi-VN", {
+    return `${toBillion(value).toLocaleString("vi-VN", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3
+    })}`;
+    /*return new Intl.NumberFormat("vi-VN", {
         maximumFractionDigits: 2
-    }).format(safeNumber(value) / 1000);
+    }).format(safeNumber(value) / 1000);*/
 }
 
 export function formatPercent(value) {
