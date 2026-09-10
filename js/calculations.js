@@ -111,3 +111,9 @@ export function formatPercent(value) {
         maximumFractionDigits: 2
     })}%`;
 }
+
+// Thêm hàm giới hạn chính xác số ký tự hiển thị ở trang chi tiết
+export function truncateString(str, maxLength = 100) {
+    if (!str) return "";
+    return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
+}

@@ -5,7 +5,8 @@ import {
     getStatus,
     formatBillion,
     formatMillion,
-    formatPercent
+    formatPercent,
+    truncateString
 } from "./calculations.js";
 import {
     createProgressChart,
@@ -75,6 +76,7 @@ function renderCommonInfo() {
     setText("sourceSheet", report.sheetName);
     setText("projectCount", report.projects.length);
     setText("reUpdated", report.reportDate || "—");
+    setText("estimateMonthLabel",`Ước chi tháng ${report.estimateMonth}`);
 }
 
 async function loadVersion() {
@@ -309,7 +311,12 @@ function initDetail() {
 
     const status = getStatus(project.rateKHV ?? 0);
 
-    setText("detailTitle", project.name);
+    // Cắt ngắn tên dự án nếu dài quá 100 ký tự
+    setText("detailTitle", truncateString(project.name, 100));
+    // Thêm thuộc tính title để khi di chuột vào vẫn xem được full tên
+    const titleEl = document.getElementById("detailTitle");
+    if (titleEl) titleEl.setAttribute("title", project.name);
+    
     setText("detailCode", project.code || "—");
     setText("detailCategory", project.category || "—");
 

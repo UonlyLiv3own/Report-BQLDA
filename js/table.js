@@ -40,7 +40,7 @@ export function renderProjectTable(container, projects, options = {}) {
                         return `
                             <tr>
                                 <td>${p.stt}</td>
-                                <td class="project-name">${escapeHtml(p.name)}</td>
+                                <td ><div class="project-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div></td>
                                 <td class="muted">${escapeHtml(p.code)}</td>
                                 <td class="table-number">${formatMillion(p.khv)}</td>
                                 <td class="table-number">${formatMillion(p.paidTotal)}</td>

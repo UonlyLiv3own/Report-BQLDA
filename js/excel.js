@@ -16,7 +16,7 @@ function findHeaderRow(rows) {
     }
     return 9; // dòng Excel 10 nếu index tính từ 0
 }
-
+// tìm ngày trên báo cáo
 function findReportDate(rows) {
     for (const row of rows) {
         for (const cell of row) {
@@ -31,6 +31,24 @@ function findReportDate(rows) {
             if (match) {
                 return match[1];
             }
+        }
+    }
+
+    return "Không xác định";
+}
+// tìm thời gian ước chi trên báo cáo
+function findEstimateMonth(rows) {
+    for (const row of rows) {
+        for (const cell of row) {
+            if (cell == null) continue;
+
+            const text = String(cell);
+
+            const match = text.match(
+                /Ước chi.*?tháng\s+(\d{1,2}\/\d{4})/i
+            );
+
+            if (match) return match[1];
         }
     }
 
@@ -139,11 +157,13 @@ export async function loadReportFromExcel() {
 
     const projects = normalizeRows(rows);
     const reportDate = findReportDate(rows);
+    const estimateMonth = findEstimateMonth(rows);
 
     return {
         source: "excel",
         sheetName,
         reportDate,
+        estimateMonth,
         unit: "triệu đồng",
         projects
     };

@@ -91,9 +91,15 @@
 }
 
 .topbar h1 {
-    margin: 0 0 5px;
+    margin: 0;
     padding-bottom: 5px;
     font-size: 28px;
+    /*display: -webkit-box;
+    -webkit-line-clamp: 2; /* Số dòng tối đa muốn hiển thị (ví dụ: 2 dòng) *
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 1500px;*/
 }
 
 .topbar p {
@@ -254,11 +260,6 @@
 .input:focus, .select:focus {
     border-color: #93c5fd;
     box-shadow: 0 0 0 3px rgba(37,99,235,.10);
-}
-
-.project-name {
-    max-width: 430px;
-    font-weight: 700;
 }
 
 .muted { color: var(--muted); }
