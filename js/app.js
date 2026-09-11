@@ -49,11 +49,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         showGlobalError(error.message);
     }
 });
-
+// setText() này để cập nhật tất cả phần tử có cùng tên ID
+function setText(id, value) {
+    document.querySelectorAll(`[id="${id}"]`).forEach(el => {
+        el.textContent = value;
+    });
+}
+/* hàm này chỉ lấy phần tử đầu tiên, nếu 1 page truy vấn 2 lần ID thì ID thứ 2 sẽ ko lấy đc giá trị
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.textContent = value;
-}
+}*/
 
 function showGlobalError(message) {
     const box = document.getElementById("appError");
@@ -130,6 +136,7 @@ function initOverview() {
     setText("totalPaid", `${formatMillion(total.paid)} Triệu`);
     setText("totalRemaining", `${formatMillion(total.remaining)} Triệu`);
     setText("totalRate", formatPercent(rate));
+    setText("progressRate", formatPercent(rate));
     setText("periodPaid", `${formatMillion(total.period)} triệu`);
 
     const progress = document.getElementById("progressBar");
