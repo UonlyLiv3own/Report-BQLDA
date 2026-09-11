@@ -36,7 +36,7 @@ function findReportDate(rows) {
 
     return "Không xác định";
 }
-// tìm thời gian ước chi trên báo cáo
+// Tìm nhãn ước chi tháng trong phần tiêu đề Excel
 function findEstimateMonth(rows) {
     for (const row of rows) {
         for (const cell of row) {
@@ -53,6 +53,44 @@ function findEstimateMonth(rows) {
     }
 
     return "Không xác định";
+}
+
+// Các tiêu đề QĐ hiện nằm ở dòng ngay dưới nhóm tiêu đề chính.
+function findCapitalDecisionColumns(rows, headerIndex) {
+    // Không khóa cứng cột O-V: tự tìm mọi cột có tiêu đề bắt đầu bằng "QĐ".
+    const columns = [];
+    // Quét rộng từ dòng headerIndex - 2 đến headerIndex + 4
+    const startRow = Math.max(0, headerIndex - 2);
+    const endRow = Math.min(rows.length, headerIndex + 5);
+
+    for (let r = startRow; r < endRow; r++) {
+        const row = rows[r] || [];
+
+        // Quét từ cột M (index 12) trở đi (thay vì cố định cột O index 14)
+        for (let col = 12; col < row.length; col++) {
+            const header = String(row[col] ?? "").replace(/\s+/g, " ").trim();
+
+            // Nhận diện linh hoạt: "QĐ, QD, Quyết định, Qđ,..." ko phân biệt hoa thường
+            if (/^(QĐ|QD|Quyết định|ĐC|Điều chỉnh)\b/i.test(header)) {
+                // Tránh thêm trùng cột nếu đã quét trúng ở dòng trên
+                if (!columns.some(c => c.index === col)) {
+                    columns.push({ index: col, label: header });
+                }
+            }
+        }
+
+        if (columns.length) break;
+    }
+
+    return columns;
+}
+function getCapitalPlanHistory(row, decisionColumns) {
+    return decisionColumns
+        .map(item => ({
+            label: item.label,
+            value: numberOrZero(row[item.index])
+        }))
+        .filter(item => item.value !== 0);
 }
 
 function findSection(row, current) {
@@ -72,7 +110,7 @@ function findSection(row, current) {
     return current;
 }
 
-function normalizeRows(rows) {
+function normalizeRows(rows, decisionColumns) {
     const headerIndex = findHeaderRow(rows);
     const data = [];
     let category = "Khác";
@@ -98,7 +136,8 @@ function normalizeRows(rows) {
 
         data.push({
             id: row[2] || `project-${i}`, // lấy mã dự án làm id hệ thống
-            stt: data.length + 1,   // auto render cột STT 
+            stt: data.length + 1,   // auto render cột STT
+            capitalPlan: getCapitalPlanHistory(row, decisionColumns),
             name: String(row[1]).trim(),
             code: row[2] == null ? "" : String(row[2]).trim(),
             category,
@@ -120,8 +159,8 @@ function normalizeRows(rows) {
             remainingOldRule: numberOrZero(row[36]),
             rateOldRule: typeof row[37] === "number" ? row[37] * 100 : null,
             paidRemaining: numberOrZero(row[39]),
-            officer: row[40] == null ? "" : String(row[40]).trim()
-            /* note: row[40] == null ? "" : String(row[40]).trim() */
+            officer: row[40] == null ? "" : String(row[40]).trim(),
+            note: row[41] == null ? "" : String(row[41]).trim()
         });
     }
 
@@ -155,9 +194,11 @@ export async function loadReportFromExcel() {
         raw: true
     });
 
-    const projects = normalizeRows(rows);
+    const headerIndex = findHeaderRow(rows);
+    const decisionColumns = findCapitalDecisionColumns(rows, headerIndex);
     const reportDate = findReportDate(rows);
     const estimateMonth = findEstimateMonth(rows);
+    const projects = normalizeRows(rows, decisionColumns);
 
     return {
         source: "excel",
@@ -165,6 +206,7 @@ export async function loadReportFromExcel() {
         reportDate,
         estimateMonth,
         unit: "triệu đồng",
+        capitalDecision: decisionColumns,
         projects
     };
 }
@@ -182,6 +224,8 @@ export async function loadReportFromJson() {
         source: "json",
         sheetName: json.meta?.sourceSheet || json.meta?.sheetName || "Không xác định",
         reportDate: json.meta?.reportDate || "Không xác định",
+        estimateMonthLabel: "Không xác định",
+        capitalDecisionColumns: [],
         unit: json.meta?.unit || "triệu đồng",
         projects: json.projects || []
     };

@@ -12,7 +12,8 @@ import {
     createProgressChart,
     createCategoryChart,
     createTopRemainingChart,
-    createRateByProjectChart
+    createRateByProjectChart,
+    createCapitalPlanChart
 } from "./charts.js";
 import { renderProjectTable } from "./table.js";
 
@@ -22,6 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         await loadVersion();        
         report = await loadReport();
+
+        // THÊM DÒNG NÀY ĐỂ DEBUG TRÊN F12 CONSOLE
+        window.report = report;
 
         /* Đoạn debug để biết chính xác lỗi nằm ở đâu */
         console.log("========== REPORT ==========");
@@ -339,9 +343,23 @@ function initDetail() {
     setText("detailStatus", status.label);
 
     const statusEl = document.getElementById("detailStatus");
-    statusEl.className = `status ${status.key}`;
+    if (statusEl) statusEl.className = `status ${status.key}`;
 
     setText("detailNote", project.note || "Không có ghi chú.");
+
+    // --- XỬ LÝ BIỂU ĐỒ DIỄN BIẾN KHV ---
+    const capitalChart = document.getElementById("capitalPlanChart");
+    const capitalEmpty = document.getElementById("capitalPlanEmpty");
+    const hasCapitalHistory = Array.isArray(project.capitalPlan) && project.capitalPlan.length > 0;
+
+    if (hasCapitalHistory) {
+        if (capitalChart) capitalChart.style.display = "block";
+        if (capitalEmpty) capitalEmpty.hidden = true;
+        createCapitalPlanChart("capitalPlanChart", project.capitalPlan);
+    } else {
+        if (capitalChart) capitalChart.style.display = "none";
+        if (capitalEmpty) capitalEmpty.hidden = false;
+    }
 }
 
 function escapeHtml(value) {

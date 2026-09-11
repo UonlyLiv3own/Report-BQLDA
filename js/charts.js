@@ -7,9 +7,9 @@ const COLORS = {
     GN2: "#860f0f",
     green: "#16A34A",
     yellow: "#EAB308",
+    red: "#DC2626",
     orange1: "#f5af7e",
     orange2: "#F97316",
-    red: "#DC2626",
     lightGray: "#cdd4df",
     darkGray: "#313335",
 };
@@ -56,7 +56,10 @@ export function createProgressChart(id, rate) {
             labels: ["Đã giải ngân", "Còn lại"],
             datasets: [{
                 data: [safeRate, remaining],
-                
+                /* backgroundColor: [COLORS.blue, COLORS.lightGray],
+                borderColor: [COLORS.white, COLORS.white],
+                borderWidth: 3,
+                hoverOffset: 5 */
             }]
         },
         options: {
@@ -262,6 +265,77 @@ export function createRateByProjectChart(id, projects) {
                     callbacks: {
                         /*label: ctx => `${ctx.raw.toFixed(2)}%`*/
                         label: ctx => `${Number(ctx.raw).toFixed(2)}%`
+                    }
+                }
+            }
+        }
+    });
+}
+
+export function createCapitalPlanChart(id, history) {
+    const items = Array.isArray(history) ? history.filter(x => Number(x?.value) !== 0) : [];
+    if (!items.length) return null;
+
+    const values = items.map(x => Number(x.value) || 0);
+    const colors = values.map(value => value < 0 ? COLORS.red : COLORS.green);
+
+    return create(id, {
+        type: "bar",
+        data: {
+            labels: items.map(x => x.label),
+            datasets: [{
+                label: "Điều chỉnh KHV",
+                data: values,
+                backgroundColor: colors,
+                borderColor: colors,
+                borderWidth: 1,
+                borderRadius: 5,
+                maxBarThickness: 42
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: {
+                        color: COLORS.gray,
+                        maxRotation: 45,
+                        minRotation: 0,
+                        autoSkip: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: "rgba(100, 116, 139, 0.12)" },
+                    ticks: {
+                        color: COLORS.gray,
+                        callback: value => formatTy(value, 0)
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "bottom",
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: "rectRounded",
+                        padding: 16,
+                        generateLabels: () => [
+                            { text: "Tăng vốn", fillStyle: COLORS.green, strokeStyle: COLORS.green },
+                            { text: "Giảm vốn", fillStyle: COLORS.red, strokeStyle: COLORS.red }
+                        ]
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => {
+                            const value = Number(ctx.raw) || 0;
+                            const prefix = value > 0 ? "+" : "";
+                            return `${prefix}${formatTy(value)}`;
+                        }
                     }
                 }
             }
