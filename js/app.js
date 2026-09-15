@@ -331,10 +331,10 @@ function initDetail() {
     setText("detailCode", project.code || "—");
     setText("detailCategory", project.category || "—");
 
-    setText("detailKHV", `${formatMillion(project.khv)} tỷ`);
-    setText("detailPaid", `${formatMillion(project.paidTotal)} tỷ`);
+    setText("detailKHV", `${formatMillion(project.khv)} triệu`);
+    setText("detailPaid", `${formatMillion(project.paidTotal)} triệu`);
     setText("detailRate", formatPercent(project.rateKHV ?? 0));
-    setText("detailRemaining", `${formatMillion(project.remaining)} tỷ`);
+    setText("detailRemaining", `${formatMillion(project.remaining)} triệu`);
     setText("detailPrevious", `${formatMillion(project.paidPrevious)} triệu`);
     setText("detailPeriod", `${formatMillion(project.paidPeriod)} triệu`);
     setText("detailCommitRate", formatPercent(project.rateCommitment ?? 0));
