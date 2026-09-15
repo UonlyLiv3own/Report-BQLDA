@@ -136,7 +136,7 @@ function initOverview() {
 
     const rate = calculateRate(total.paid, total.khv);
 
-    setText("totalKHV", `${formatBillion(total.khv)} Tỷ`);
+    setText("totalKHV", `${formatBillion(total.khv)} Triệu`);
     setText("totalPaid", `${formatMillion(total.paid)} Triệu`);
     setText("totalRemaining", `${formatMillion(total.remaining)} Triệu`);
     setText("totalRate", formatPercent(rate));
