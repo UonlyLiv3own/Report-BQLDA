@@ -175,7 +175,7 @@ function initOverview() {
 
     renderRankList("topRemainingList",
         topRemaining.slice(0, 5),
-        p => `${formatBillion(p.remaining)} tỷ`
+        p => `${formatBillion(p.remaining)} triệu`
     );
 }
 
@@ -235,10 +235,8 @@ function initProjects() {
                 category.value === "all" || p.category === category.value;
 
             const matchStatus =
-                status.value === "all" || getStatus(
-                    p.rateKHV ?? 0,
-                    p.capitalAdjustment ?? 0
-                ).key === status.value;
+                status.value === "all" || 
+                getStatus(p).key === status.value;
 
             const matchOfficer =
                 officer.value === "all" ||
@@ -320,7 +318,7 @@ function initDetail() {
         return;
     }
 
-    const status = getStatus(project.rateKHV ?? 0, project.capitalAdjustment ?? 0);
+    const status = getStatus(project);
 
     // Cắt ngắn tên dự án nếu dài quá 100 ký tự
     setText("detailTitle", truncateString(project.name, 100));

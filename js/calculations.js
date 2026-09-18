@@ -19,17 +19,25 @@ export function calculateRemaining(khv, paid) {
     return Math.max(0, safeNumber(khv) - safeNumber(paid));
 }
 
-export function getStatus(rate, capitalAdjustment) {
-    rate = safeNumber(rate);
+export function getStatus(project) {
+    if (!project) return { key: "none", label: "Chưa giải ngân" };
 
-    // Ưu tiên trạng thái giảm vốn
+    const khv = safeNumber(project.khv);
+    const paidTotal = safeNumber(project.paidTotal);
+    const capitalAdjustment = safeNumber(project.capitalAdjustment);
+
+    // 1. Ưu tiên trạng thái Giảm vốn
     if (capitalAdjustment < 0) {
-        return {
-            label: "Giảm vốn",
-            key: "reduction"
-        };
+        return { label: "Giảm vốn", key: "reduction" };
     }
-    // sau đó mới xét đến tiến dộ giải ngân
+
+    // 2. Tự tính lại Tỷ lệ % nếu trong Excel bị trống hoặc = 0
+    let rate = safeNumber(project.rateKHV ?? project.rate);
+    if (rate === 0 && khv > 0 && paidTotal > 0) {
+        rate = (paidTotal / khv) * 100;
+    }
+
+    // 3. Xét tiến độ theo Tỷ lệ đã được tính lại
     if (rate >= 70) {
         return { key: "good", label: "Đạt tiến độ" };
     }
@@ -38,10 +46,12 @@ export function getStatus(rate, capitalAdjustment) {
         return { key: "warning", label: "Cần theo dõi" };
     }
 
-    if (rate > 0) {
+    // Nếu đã có giải ngân tiền (> 0) nhưng tỷ lệ thấp
+    if (rate > 0 || paidTotal > 0) {
         return { key: "bad", label: "Chậm tiến độ" };
     }
 
+    // Chỉ khi thực sự chưa giải ngân đồng nào
     return { key: "none", label: "Chưa giải ngân" };
 }
 

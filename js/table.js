@@ -36,7 +36,7 @@ export function renderProjectTable(container, projects, options = {}) {
                 </thead>
                 <tbody>
                     ${pageItems.map(p => {
-                        const status = getStatus(p.rateKHV ?? 0, p.capitalAdjustment ?? 0);
+                        const status = getStatus(p);
                         return `
                             <tr>
                                 <td>${p.stt}</td>
