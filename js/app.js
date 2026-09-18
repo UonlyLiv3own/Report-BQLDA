@@ -320,7 +320,7 @@ function initDetail() {
         return;
     }
 
-    const status = getStatus(project.rateKHV ?? 0);
+    const status = getStatus(project.rateKHV ?? 0, project.capitalAdjustment ?? 0);
 
     // Cắt ngắn tên dự án nếu dài quá 100 ký tự
     setText("detailTitle", truncateString(project.name, 100));

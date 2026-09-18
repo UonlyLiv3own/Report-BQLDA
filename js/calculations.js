@@ -19,7 +19,7 @@ export function calculateRemaining(khv, paid) {
     return Math.max(0, safeNumber(khv) - safeNumber(paid));
 }
 
-export function getStatus(rate, capitalAdjustment = 0) {
+export function getStatus(rate, capitalAdjustment) {
     rate = safeNumber(rate);
 
     // Ưu tiên trạng thái giảm vốn

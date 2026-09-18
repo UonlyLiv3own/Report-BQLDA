@@ -126,12 +126,13 @@ function normalizeRows(rows, decisionColumns) {
             !Number.isFinite(Number(row[0])) || !row[1] || typeof row[1] !== "string") { continue;
         }
 
-        const rateKHV = typeof row[26] === "number"
-            ? row[26] * 100
+        // Tính lại tỷ lệ % KHV ở Cột AC (Index 28)
+        const rateKHV = typeof row[27] === "number"
+            ? row[27] * 100
             : null;
 
-        const rateCommitment = typeof row[27] === "number"
-            ? row[27] * 100
+        const rateCommitment = typeof row[28] === "number"
+            ? row[28] * 100
             : null;
 
         data.push({
@@ -141,26 +142,39 @@ function normalizeRows(rows, decisionColumns) {
             name: String(row[1]).trim(),
             code: row[2] == null ? "" : String(row[2]).trim(),
             category,
-            // Cột U - điều chỉnh/giảm vốn
+            // Cột U - Điều chỉnh vốn (Index 20)
             capitalAdjustment: numberOrZero(row[20]),
+            // Cột W - KHV đã giao (Index 22)
             khv: numberOrZero(row[22]),
+            // Cột X - Giải ngân kỳ trước (Index 23)
             paidPrevious: numberOrZero(row[23]),
-            paidPeriod: numberOrZero(row[24]),
-            paidTotal: numberOrZero(row[25]),
+            // Cột Y + Z - Giải ngân trong tuần (Index 24 + 25)
+            paidPeriod: numberOrZero(row[24]) + numberOrZero(row[25]),
+            // Cột AA - Tổng giải ngân đến ngày BC (Index 26)
+            paidTotal: numberOrZero(row[26]),
             rateKHV,
             rateCommitment,
-            estimateMonth: numberOrZero(row[28]),
-            remainingMonth: numberOrZero(row[29]),
-            remaining: numberOrZero(row[31]),
-            estimateFuture1: numberOrZero(row[32]),
-            estimateFuture2: numberOrZero(row[33]),
-            estimateTo15Jan: numberOrZero(row[34]),
-            estimateTo31May: numberOrZero(row[35]),
-            remainingOldRule: numberOrZero(row[36]),
-            rateOldRule: typeof row[37] === "number" ? row[37] * 100 : null,
-            paidRemaining: numberOrZero(row[39]),
-            officer: row[40] == null ? "" : String(row[40]).trim(),
-            note: row[41] == null ? "" : String(row[41]).trim()
+            // Cột AD - Ước chi tháng (Index 29)
+            estimateMonth: numberOrZero(row[29]),
+            // Cột AE - Số đã chi trong tháng (Index 30)
+            remainingMonth: numberOrZero(row[30]),
+            // Cột AI - Số còn phải giải ngân so với ngày BC (Index 34)
+            remaining: numberOrZero(row[34]),
+            // Cột AJ, AK (Index 35, 36)
+            estimateFuture1: numberOrZero(row[35]),
+            estimateFuture2: numberOrZero(row[36]),
+            // Cột AL, AM (Index 37, 38)
+            estimateTo15Jan: numberOrZero(row[37]),
+            estimateTo31May: numberOrZero(row[38]),
+            // Cột AN, AO (Index 39, 40)
+            remainingOldRule: numberOrZero(row[39]),
+            rateOldRule: typeof row[40] === "number" ? row[40] * 100 : null,
+            // Cột AQ - Số tiền còn phải giải ngân (Index 42)
+            paidRemaining: numberOrZero(row[42]),
+            // Cột AR - Cán bộ kỹ thuật (Index 43)
+            officer: row[43] == null ? "" : String(row[43]).trim(),
+            // Cột AS - Ghi chú (Index 44)
+            note: row[44] == null ? "" : String(row[44]).trim()
         });
     }
 
@@ -181,7 +195,15 @@ export async function loadReportFromExcel() {
     const buffer = await response.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: "array" });
 
-    const sheetName = workbook.SheetNames[0];
+    //const sheetName = workbook.SheetNames[0];
+    //const sheet = workbook.Sheets[sheetName];
+
+    // Chọn sheet "BAO CAO 18-09-2026" nếu có, hoặc lấy sheet cuối cùng thay vì sheet đầu tiên
+    const targetSheetName = "BAO CAO 18-09-2026";
+    const sheetName = workbook.SheetNames.includes(targetSheetName)
+        ? targetSheetName
+        : workbook.SheetNames[workbook.SheetNames.length - 1]; // Lấy sheet mới nhất ở cuối
+
     const sheet = workbook.Sheets[sheetName];
 
     if (!sheet) {
