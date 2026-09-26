@@ -1,0 +1,238 @@
+function normalizeRows(rows, decisionColumns) {
+    const headerIndex = findHeaderRow(rows);
+    const data = [];
+    let category = "Khác";
+
+    for (let i = headerIndex + 2; i < rows.length; i++) {
+        const row = rows[i] || [];
+        category = findSection(row, category);
+
+        // điều kiện dữ liệu hiển thị: STT phải là số thực sự tồn tại, tên dự án phải là chuỗi
+        if (
+            row[0] == null ||
+            row[0] === "" ||
+            !Number.isFinite(Number(row[0])) || !row[1] || typeof row[1] !== "string") { continue;
+        }
+
+        const rateKHV = typeof row[26] === "number"
+            ? row[26] * 100
+            : null;
+
+        const rateCommitment = typeof row[27] === "number"
+            ? row[27] * 100
+            : null;
+
+        data.push({
+            id: row[2] || `project-${i}`, // lấy mã dự án làm id hệ thống
+            stt: data.length + 1,   // auto render cột STT
+            capitalPlan: getCapitalPlanHistory(row, decisionColumns),
+            name: String(row[1]).trim(),
+            code: row[2] == null ? "" : String(row[2]).trim(),
+            category,
+            // Cột U - điều chỉnh/giảm vốn
+            capitalAdjustment: numberOrZero(row[20]),
+            khv: numberOrZero(row[22]),
+            paidPrevious: numberOrZero(row[23]),
+            paidPeriod: numberOrZero(row[24]),
+            paidTotal: numberOrZero(row[25]),
+            rateKHV,
+            rateCommitment,
+            estimateMonth: numberOrZero(row[28]),
+            remainingMonth: numberOrZero(row[29]),
+            remaining: numberOrZero(row[31]),
+            estimateFuture1: numberOrZero(row[32]),
+            estimateFuture2: numberOrZero(row[33]),
+            estimateTo15Jan: numberOrZero(row[34]),
+            estimateTo31May: numberOrZero(row[35]),
+            remainingOldRule: numberOrZero(row[36]),
+            rateOldRule: typeof row[37] === "number" ? row[37] * 100 : null,
+            paidRemaining: numberOrZero(row[39]),
+            officer: row[40] == null ? "" : String(row[40]).trim(),
+            note: row[41] == null ? "" : String(row[41]).trim()
+        });
+    }
+
+    return data;
+}
+
+======================================================================================
+
+// Hàm tìm vị trí chỉ mục (index) của cột dựa vào danh sách từ khóa linh hoạt
+function buildColumnMapping(rows, headerIndex) {
+    // Merge 3 dòng xung quanh header để quét từ khóa tiêu đề đầy đủ nhất
+    const combinedHeaders = (rows[headerIndex] || []).map((_, colIdx) => {
+        const h1 = String(rows[headerIndex - 1]?.[colIdx] ?? "");
+        const h2 = String(rows[headerIndex]?.[colIdx] ?? "");
+        const h3 = String(rows[headerIndex + 1]?.[colIdx] ?? "");
+        return `${h1} ${h2} ${h3}`.toLowerCase().replace(/\s+/g, " ");
+    });
+    const subHeaderRow = rows[headerIndex + 2] || []; // Dùng kiểm tra số thứ tự cột 1, 2, 3... nếu có
+
+    const findIndex = (keywords) => {
+        return combinedHeaders.findIndex(text => 
+            keywords.some(kw => text.includes(kw.toLowerCase()))
+        );
+    };
+
+    return {
+        stt: findIndex(["STT", "stt", "số tt"]),
+        name: findIndex(["TÊN DA TRONG", "TÊN DỰ ÁN", "TÊN DA"]),
+        code: findIndex(["Mã dự án", "MA DA"]),
+        khv: findIndex(["TỔNG KHV NĂM", "KHV NĂM 202", "KẾ HOẠCH VỐN NĂM"]),
+        capitalAdjustment: findIndex(["điều chỉnh", "tăng/giảm vốn", "giảm vốn", "điều chỉnh vốn"]),
+        paidPrevious: findIndex(["Số giải ngân đến cuối kỳ trước"]),
+        paidTotal: findIndex(["TỔNG SỐ GIẢI NGÂN ĐẾN NGÀY BÁO CÁO", "TỔNG SỐ GIẢI NGÂN"]),
+        rateKHV: findIndex(["Tỷ lệ giải ngân (%) so với KHV", "Tỷ lệ giải ngân (%)"]),
+        rateCommitment: findIndex(["so với cam kết giải ngân"]),
+        estimateMonth: findIndex(["Uớc chi trong tháng", "Ước chi tháng"]),
+        remaining: findIndex(["Số còn phải giải ngân so với ngày BC", "Số còn phải giải ngân"]),
+        officer: findIndex(["Cán Bộ Kỹ Thuật", "Cán bộ KT", "Cán bộ"]),
+        note: findIndex(["Ghi chú", "thông tin thêm"])
+    };
+}
+
+// Chuẩn hóa toàn bộ dữ liệu dòng thành Object chuẩn
+function normalizeRows(rows, decisionColumns) {
+    const headerIndex = findHeaderRow(rows);
+    const col = buildColumnMapping(rows, headerIndex); // Tự động xác định lại chỉ mục cột mỗi lần đọc
+    const data = [];
+    let category = "Dự án chung";
+
+    for (let i = headerIndex + 3; i < rows.length; i++) {
+        const row = rows[i] || [];
+        category = findSection(row, category);
+
+        // Kiểm tra dòng dữ liệu hợp lệ (phải có STT là số và có tên dự án)
+        const sttRaw = row[col.stt !== -1 ? col.stt : 0];
+        const nameRaw = row[col.name !== -1 ? col.name : 1];
+
+        // Lọc bỏ các dòng tiêu đề nhóm hoặc dòng trống
+        if (
+            sttRaw == null || sttRaw === "" ||
+            isNaN(Number(sttRaw)) || 
+            !nameRaw
+        ) { 
+            continue; 
+        }
+
+        const projectCode = col.code !== -1 && row[col.code] != null ? String(row[col.code]).trim() : "";
+
+        data.push({
+            id: projectCode || `project-${data.length + 1}`,    // lấy mã DA làm id hệ thống
+            stt: data.length + 1,   // auto render cột STT
+            name: String(nameRaw).trim(),
+            code: projectCode,
+            category,
+            capitalPlan: getCapitalPlanHistory(row, decisionColumns),
+            capitalAdjustment: col.capitalAdjustment !== -1 ? numberOrZero(row[col.capitalAdjustment]) : 0,   // Cột U - điều chỉnh/giảm vốn
+            khv: col.khv !== -1 ? numberOrZero(row[col.khv]) : 0,
+            paidPrevious: col.paidPrevious !== -1 ? numberOrZero(row[col.paidPrevious]) : 0,
+            paidTotal: col.paidTotal !== -1 ? numberOrZero(row[col.paidTotal]) : 0,
+            rateKHV: col.rateKHV !== -1 ? parseRate(row[col.rateKHV]) : null,
+            rateCommitment: col.rateCommitment !== -1 ? parseRate(row[col.rateCommitment]) : null,
+            estimateMonth: col.estimateMonth !== -1 ? numberOrZero(row[col.estimateMonth]) : 0,
+            remaining: col.remaining !== -1 ? numberOrZero(row[col.remaining]) : 0,
+            officer: col.officer !== -1 && row[col.officer] != null ? String(row[col.officer]).trim() : "",
+            note: col.note !== -1 && row[col.note] != null ? String(row[col.note]).trim() : ""
+        });
+    }
+
+    return data;
+}
+
+======================================================================================
+
+function normalizeRows(rows, decisionColumns) {
+    const headerIndex = findHeaderRow(rows);
+    const data = [];
+    let currentCategory = "Dự án chung";
+    let currentOfficer = "Chưa phân công"; // Tên cán bộ mặc định từ nhóm
+
+    // Cố định Index cột chính xác dựa theo file bao-cao.xlsx
+    const COL_STT = 0;             // Cột A
+    const COL_NAME = 1;            // Cột B
+    const COL_CODE = 2;            // Cột C
+    const COL_ADJ = 20;            // Cột U (QĐ 5546 - Giảm vốn)
+    const COL_KHV = 22;            // Cột W (TỔNG KHV NĂM 2026 ĐÃ GIAO)
+    const COL_PAID_PREV = 23;      // Cột X
+    const COL_PAID_TOTAL = 26;     // Cột AA (TỔNG SỐ GIẢI NGÂN)
+    const COL_RATE_KHV = 27;       // Cột AB
+    const COL_RATE_COMMIT = 28;    // Cột AC
+    const COL_ESTIMATE = 29;       // Cột AD
+    const COL_REMAINING = 34;      // Cột AI
+    const COL_OFFICER = 43;        // Cột AR (Cán bộ kỹ thuật)
+    const COL_NOTE = 44;           // Cột AS (Ghi chú)
+
+    let autoIncrementSTT = 1;
+
+    for (let i = headerIndex + 1; i < rows.length; i++) {
+        const row = rows[i] || [];
+        const sttRaw = row[COL_STT];
+        const nameRaw = row[COL_NAME];
+
+        if (!nameRaw) continue;
+        const nameStr = String(nameRaw).trim();
+
+        // Bỏ qua các dòng tổng cộng
+        if (/^(TỔNG|CỘNG|TỔNG KHV)/i.test(nameStr)) continue;
+
+        // Nhận diện dòng Nhóm/Danh mục Dự án (Ví dụ: I. DỰ ÁN ĐANG CHỜ QUYẾT TOÁN)
+        if (isNaN(Number(sttRaw)) && (nameStr.toUpperCase().includes("DỰ ÁN") || nameStr.toUpperCase().includes("DA ") || nameStr.toUpperCase().includes("CÔNG TRÌNH"))) {
+            currentCategory = nameStr;
+            // Nếu dòng tiêu đề nhóm có gán tên Cán bộ ở cột 44
+            if (row[COL_OFFICER] != null && String(row[COL_OFFICER]).trim() !== "") {
+                currentOfficer = String(row[COL_OFFICER]).trim();
+            }
+            continue;
+        }
+
+        // Bắt buộc dòng dự án hợp lệ phải có STT là số
+        const parsedSTT = Number(sttRaw);
+        if (isNaN(parsedSTT) || sttRaw == null || sttRaw === "") continue;
+
+        // Ưu tiên lấy cán bộ ở dòng riêng, nếu trống sẽ kế thừa từ Nhóm
+        const officerStr = (row[COL_OFFICER] != null && String(row[COL_OFFICER]).trim() !== "")
+            ? String(row[COL_OFFICER]).trim()
+            : currentOfficer;
+
+        const capitalAdjustment = numberOrZero(row[COL_ADJ]);
+        const projectCode = row[COL_CODE] != null ? String(row[COL_CODE]).trim() : "";
+
+        data.push({
+            // Đảm bảo thuộc tính STT tương thích với cả 2 cách đọc giao diện
+            stt: autoIncrementSTT,
+            sttNo: autoIncrementSTT,
+            sttIndex: autoIncrementSTT,
+            
+            id: projectCode || `project-${autoIncrementSTT}`,
+            name: nameStr,
+            code: projectCode,
+            category: currentCategory,
+            
+            capitalPlan: getCapitalPlanHistory(row, decisionColumns),
+            capitalAdjustment: capitalAdjustment,
+            
+            // Đánh dấu Tag giảm vốn
+            isReduced: capitalAdjustment < 0,
+            hasReduction: capitalAdjustment < 0,
+            
+            khv: numberOrZero(row[COL_KHV]),
+            paidPrevious: numberOrZero(row[COL_PAID_PREV]),
+            paidTotal: numberOrZero(row[COL_PAID_TOTAL]),
+            rateKHV: parseRate(row[COL_RATE_KHV]),
+            rateCommitment: parseRate(row[COL_RATE_COMMIT]),
+            estimateMonth: numberOrZero(row[COL_ESTIMATE]),
+            remaining: numberOrZero(row[COL_REMAINING]),
+            
+            officer: officerStr,
+            officerName: officerStr, // Tương thích ngược nếu UI đọc officerName
+            note: row[COL_NOTE] != null ? String(row[COL_NOTE]).trim() : ""
+        });
+
+        autoIncrementSTT++;
+    }
+
+    return data;
+}
+
+

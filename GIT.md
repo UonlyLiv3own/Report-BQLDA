@@ -10,3 +10,23 @@ git branch -M main
 git remote add origin https://github.com/UonlyLiv3own/**repositoryName**.git
 git push -u origin main
 
+## UPDATE BC GIẢI NGÂN
+
+**SỬA MỚI:**
+const EXCEL_PATH = "../report/bao-cao01.xlsx";
+
+const targetSheetName = "BAO CAO 25-09-2026";
+
+*Cập nhật chỉ số cột (Column Index) trong hàm normalizeRows*
+- Tỷ lệ % KHV ở Cột Q (Index 16)
+- Tỷ lệ Cam kết ở Cột R (Index 17)
+- Mã dự án ở Cột C (Index 2)
+- Tên dự án ở Cột B (Index 1)
+- Cột J, K, L (Index 9, 10, 11) chứa các QĐ điều chỉnh mới
+- Cột M - TỔNG KHV NĂM 2026 ĐÃ GIAO (Index 12)
+- Cột N - Số giải ngân đến cuối kỳ trước (Index 13)
+- Cột O - Số giải ngân trong tuần (Index 14)
+- Cột P - TỔNG SỐ GIẢI NGÂN ĐẾN NGÀY BÁO CÁO (Index 15)
+...
+- Cột AG - Cán bộ Kỹ thuật (Index 32)
+- Cột AH - Ghi chú (Index 33)

@@ -1,4 +1,4 @@
-const EXCEL_PATH = "../report/bao-cao.xlsx";
+const EXCEL_PATH = "../report/bao-cao01.xlsx";
 const JSON_PATH = "../data/bao-cao.json";
 
 function numberOrZero(value) {
@@ -123,58 +123,72 @@ function normalizeRows(rows, decisionColumns) {
         if (
             row[0] == null ||
             row[0] === "" ||
-            !Number.isFinite(Number(row[0])) || !row[1] || typeof row[1] !== "string") { continue;
-        }
+            !Number.isFinite(Number(row[0])) || !row[1] || typeof row[1] !== "string") { continue; }
 
-        // Tính lại tỷ lệ % KHV ở Cột AC (Index 28)
-        const rateKHV = typeof row[27] === "number"
-            ? row[27] * 100
-            : null;
+        // ------------- CÁC CỘT CẦN ĐƯỢC CẬP NHẬT CHÍNH XÁC THEO FILE BAO-CAO.XLSX -------------
 
-        const rateCommitment = typeof row[28] === "number"
-            ? row[28] * 100
-            : null;
+        // Tỷ lệ % KHV ở Cột Q (Index 16)
+        const rateKHV = typeof row[16] === "number" ? row[16] * 100 : null;
+
+        // Tỷ lệ Cam kết ở Cột R (Index 17)
+        const rateCommitment = typeof row[17] === "number" ? row[17] * 100 : null;
 
         data.push({
+            // Mã dự án ở Cột C (Index 2) - (đã loại bỏ các cột KHV các năm cũ 2017–2024)
             id: row[2] || `project-${i}`, // lấy mã dự án làm id hệ thống
             stt: data.length + 1,   // auto render cột STT
             capitalPlan: getCapitalPlanHistory(row, decisionColumns),
-            name: String(row[1]).trim(),
+            name: String(row[1]).trim(),  // Tên dự án ở Cột B (Index 1)
             code: row[2] == null ? "" : String(row[2]).trim(),
             category,
-            // Cột U - Điều chỉnh vốn (Index 20)
-            capitalAdjustment: numberOrZero(row[20]),
-            // Cột W - KHV đã giao (Index 22)
-            khv: numberOrZero(row[22]),
-            // Cột X - Giải ngân kỳ trước (Index 23)
-            paidPrevious: numberOrZero(row[23]),
-            // Cột Y + Z - Giải ngân trong tuần (Index 24 + 25)
-            paidPeriod: numberOrZero(row[24]) + numberOrZero(row[25]),
-            // Cột AA - Tổng giải ngân đến ngày BC (Index 26)
-            paidTotal: numberOrZero(row[26]),
+
+            // Cột J, K, L (Index 9, 10, 11) chứa các QĐ điều chỉnh mới
+            capitalAdjustment: numberOrZero(row[9]) + numberOrZero(row[10]) + numberOrZero(row[11]),
+
+            // Cột M - TỔNG KHV NĂM 2026 ĐÃ GIAO (Index 12)
+            khv: numberOrZero(row[12]),
+
+            // Cột N - Số giải ngân đến cuối kỳ trước (Index 13)
+            paidPrevious: numberOrZero(row[13]),
+
+            // Cột O - Số giải ngân trong tuần (Index 14)
+            paidPeriod: numberOrZero(row[14]),
+
+            // Cột P - TỔNG SỐ GIẢI NGÂN ĐẾN NGÀY BÁO CÁO (Index 15)
+            paidTotal: numberOrZero(row[15]),
+
             rateKHV,
             rateCommitment,
-            // Cột AD - Ước chi tháng (Index 29)
-            estimateMonth: numberOrZero(row[29]),
-            // Cột AE - Số đã chi trong tháng (Index 30)
-            remainingMonth: numberOrZero(row[30]),
-            // Cột AI - Số còn phải giải ngân so với ngày BC (Index 34)
-            remaining: numberOrZero(row[34]),
-            // Cột AJ, AK (Index 35, 36)
-            estimateFuture1: numberOrZero(row[35]),
-            estimateFuture2: numberOrZero(row[36]),
-            // Cột AL, AM (Index 37, 38)
-            estimateTo15Jan: numberOrZero(row[37]),
-            estimateTo31May: numberOrZero(row[38]),
-            // Cột AN, AO (Index 39, 40)
-            remainingOldRule: numberOrZero(row[39]),
-            rateOldRule: typeof row[40] === "number" ? row[40] * 100 : null,
-            // Cột AQ - Số tiền còn phải giải ngân (Index 42)
-            paidRemaining: numberOrZero(row[42]),
-            // Cột AR - Cán bộ kỹ thuật (Index 43)
-            officer: row[43] == null ? "" : String(row[43]).trim(),
-            // Cột AS - Ghi chú (Index 44)
-            note: row[44] == null ? "" : String(row[44]).trim()
+
+            // Cột S - Ước chi trong tháng (Index 18)
+            estimateMonth: numberOrZero(row[18]),
+
+            // Cột T - Số đã chi trong tháng (Index 19)
+            remainingMonth: numberOrZero(row[19]),
+
+            // Cột X - Số còn phải giải ngân so với ngày BC (Index 23)
+            remaining: numberOrZero(row[23]),
+
+            // Cột Y, Z (Index 24, 25)
+            estimateFuture1: numberOrZero(row[24]),
+            estimateFuture2: numberOrZero(row[25]),
+
+            // Cột AA, AB (Index 26, 27)
+            estimateTo15Jan: numberOrZero(row[26]),
+            estimateTo31May: numberOrZero(row[27]),
+
+            // Cột AC, AD (Index 28, 29)
+            remainingOldRule: numberOrZero(row[28]),
+            rateOldRule: typeof row[29] === "number" ? row[29] * 100 : null,
+
+            // Cột AF - Số tiền còn phải giải ngân (Index 31)
+            paidRemaining: numberOrZero(row[31]),
+
+            // Cột AG - Cán bộ Kỹ thuật (Index 32)
+            officer: row[32] == null ? "" : String(row[32]).trim(),
+
+            // Cột AH - Ghi chú (Index 33)
+            note: row[33] == null ? "" : String(row[33]).trim()
         });
     }
 
@@ -199,7 +213,7 @@ export async function loadReportFromExcel() {
     //const sheet = workbook.Sheets[sheetName];
 
     // Chọn sheet "BAO CAO 18-09-2026" nếu có, hoặc lấy sheet cuối cùng thay vì sheet đầu tiên
-    const targetSheetName = "BAO CAO 18-09-2026";
+    const targetSheetName = "BAO CAO 25-09-2026";
     const sheetName = workbook.SheetNames.includes(targetSheetName)
         ? targetSheetName
         : workbook.SheetNames[workbook.SheetNames.length - 1]; // Lấy sheet mới nhất ở cuối
