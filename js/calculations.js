@@ -90,7 +90,7 @@ export function filterProjects(projects, { search = "", category = "all", status
             category === "all" || p.category === category;
 
         const matchStatus =
-            status === "all" || getStatus(p.rateKHV, p.capitalAdjustment).key === status;
+            status === "all" || getStatus(p).key === status;
 
         return matchSearch && matchCategory && matchStatus;
     });

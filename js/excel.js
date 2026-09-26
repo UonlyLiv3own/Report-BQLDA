@@ -133,6 +133,12 @@ function normalizeRows(rows, decisionColumns) {
         // Tỷ lệ Cam kết ở Cột R (Index 17)
         const rateCommitment = typeof row[17] === "number" ? row[17] * 100 : null;
 
+        // Tính tổng số tiền điều chỉnh (Cộng tất cả các cột QĐ từ cột F trở đi, bỏ qua cột E vốn gốc)
+        const capitalHistory = getCapitalPlanHistory(row, decisionColumns);
+        const capitalAdjustment = capitalHistory
+            .slice(1) // Bỏ QĐ vốn gốc ban đầu (Cột E)
+            .reduce((sum, item) => sum + (item.value || 0), 0);
+
         data.push({
             // Mã dự án ở Cột C (Index 2) - (đã loại bỏ các cột KHV các năm cũ 2017–2024)
             id: row[2] || `project-${i}`, // lấy mã dự án làm id hệ thống
@@ -141,9 +147,7 @@ function normalizeRows(rows, decisionColumns) {
             name: String(row[1]).trim(),  // Tên dự án ở Cột B (Index 1)
             code: row[2] == null ? "" : String(row[2]).trim(),
             category,
-
-            // Cột J, K, L (Index 9, 10, 11) chứa các QĐ điều chỉnh mới
-            capitalAdjustment: numberOrZero(row[9]) + numberOrZero(row[10]) + numberOrZero(row[11]),
+            capitalAdjustment,  // BẮT BUỘC có dòng này để nhận ra số âm
 
             // Cột M - TỔNG KHV NĂM 2026 ĐÃ GIAO (Index 12)
             khv: numberOrZero(row[12]),
