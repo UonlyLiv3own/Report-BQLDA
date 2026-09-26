@@ -236,3 +236,37 @@ function normalizeRows(rows, decisionColumns) {
 }
 
 
+----------- hàm reportDate trong excel.js
+function findReportDate(rows, sheetName) {
+    // 1. Thử lấy từ tên Sheet trước (Ví dụ: "BAO CAO 25-09-2026")
+    const matchSheet = sheetName.match(/(\d{2}[-/.]\d{2}[-/.]\d{4})/);
+    if (matchSheet) {
+        const [day, month, year] = matchSheet[1].split(/[-/.]/);
+        return `${day}/${month}/${year}`;
+    }
+
+    // 2. Nếu không có, quét 5 dòng đầu của Excel (Dòng 5 chứa "(Tính đến ngày 25/09/2026)")
+    for (let r = 0; r < Math.min(rows.length, 5); r++) {
+        const cellValue = String(rows[r][0] || "");
+        const matchCell = cellValue.match(/nguay\s*(\d{2}[-/.]\d{2}[-/.]\d{4})/i) || 
+                          cellValue.match(/(\d{2}[-/.]\d{2}[-/.]\d{4})/);
+        if (matchCell) {
+            return matchCell[1].replace(/[-.]/g, "/");
+        }
+    }
+
+    return "25/09/2026"; // Mặc định nếu không tìm thấy
+}
+----------- Thứ tự gọi hàm async trong app.js
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        // BẮT BUỘC await load Excel xong mới lấy được report.reportDate
+        await loadExcelData(); 
+
+        if (page === "landing" || !page) {
+            renderLandingInfo();
+        }
+    } catch (err) {
+        console.error("Lỗi đọc dữ liệu:", err);
+    }
+});
