@@ -1,4 +1,4 @@
-const EXCEL_PATH = "../report/bao-cao01.xlsx";
+const EXCEL_PATH = "../report/bao-cao.xlsx";
 const JSON_PATH = "../data/bao-cao.json";
 
 function numberOrZero(value) {
@@ -16,6 +16,7 @@ function findHeaderRow(rows) {
     }
     return 9; // dòng Excel 10 nếu index tính từ 0
 }
+
 // tìm ngày trên báo cáo
 function findReportDate(rows) {
     for (const row of rows) {
@@ -33,8 +34,7 @@ function findReportDate(rows) {
             }
         }
     }
-
-    return "Không xác định";
+    return "25/09/2026";    // Mặc định nếu không tìm thấy
 }
 // Tìm nhãn ước chi tháng trong phần tiêu đề Excel
 function findEstimateMonth(rows) {
