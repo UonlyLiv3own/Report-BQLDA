@@ -1,4 +1,4 @@
-const EXCEL_PATH = "../report/bao-cao.xlsx";
+const EXCEL_PATH = "../report/bao-cao01.xlsx";
 const JSON_PATH = "../data/bao-cao.json";
 
 function numberOrZero(value) {
