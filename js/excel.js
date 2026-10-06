@@ -1,4 +1,4 @@
-const EXCEL_PATH = "../report/bao-cao01.xlsx";
+const EXCEL_PATH = "../report/bao-cao.xlsx";
 const JSON_PATH = "../data/bao-cao.json";
 
 function numberOrZero(value) {
@@ -215,7 +215,7 @@ export async function loadReportFromExcel() {
     //const sheet = workbook.Sheets[sheetName];
 
     // Chọn sheet "BAO CAO 18-09-2026" nếu có, hoặc lấy sheet cuối cùng thay vì sheet đầu tiên
-    const targetSheetName = "BAO CAO 25-09-2026";
+    const targetSheetName = "BAO CAO 06-10-2026";
     const sheetName = workbook.SheetNames.includes(targetSheetName)
         ? targetSheetName
         : workbook.SheetNames[workbook.SheetNames.length - 1]; // Lấy sheet mới nhất ở cuối
