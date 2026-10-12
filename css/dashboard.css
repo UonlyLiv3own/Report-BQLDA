@@ -120,8 +120,15 @@
 
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
+    margin-bottom: 18px;
+}
+/* Bố cục riêng cho trang Tiến độ */
+.kpi-progress {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
     margin-bottom: 18px;
 }
 
@@ -391,6 +398,7 @@
 @media (max-width: 1100px) {
     .sidebar { width: 220px; flex-basis: 220px; }
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .kpi-progress {}
     .grid-2 { grid-template-columns: 1fr; }
     .detail-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -410,7 +418,11 @@
     .main { padding: 18px; }
     .topbar { flex-direction: column; }
     .kpi-grid { grid-template-columns: 1fr; }
+    .kpi-progress {}
     .grid-3 { grid-template-columns: 1fr; }
     .detail-grid { grid-template-columns: 1fr; }
     .input { min-width: 100%; }
 }
+
+/* Six overview KPIs: keep large amounts readable */
+.kpi-value { overflow-wrap: anywhere; }

@@ -128,16 +128,20 @@ function initOverview() {
     const projects = report.projects;
     const total = projects.reduce((a, p) => {
         a.khv += p.khv || 0;
+        a.commitment += p.commitment2026 || 0;
         a.paid += p.paidTotal || 0;
         a.remaining += p.remaining || 0;
         a.period += p.paidPeriod || 0;
         return a;
-    }, { khv: 0, paid: 0, remaining: 0, period: 0 });
+    }, { khv: 0, commitment: 0, paid: 0, remaining: 0, period: 0 });
 
     const rate = calculateRate(total.paid, total.khv);
+    const commitmentRate = calculateRate(total.paid, total.commitment);
 
     setText("totalKHV", `${formatBillion(total.khv)} Triệu`);
     setText("totalPaid", `${formatMillion(total.paid)} Triệu`);
+    setText("totalCommitment", `${formatMillion(total.commitment)} Triệu`);
+    setText("totalCommitmentRate", total.commitment > 0 ? formatPercent(commitmentRate) : "—");
     setText("totalRemaining", `${formatMillion(total.remaining)} Triệu`);
     setText("totalRate", formatPercent(rate));
     setText("progressRate", formatPercent(rate));

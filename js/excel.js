@@ -149,6 +149,7 @@ function normalizeRows(rows, decisionColumns) {
 
             // Cột M - TỔNG KHV NĂM 2026 ĐÃ GIAO (Index 12)
             khv: numberOrZero(row[12]),
+            commitment2026: numberOrZero(row[3]),
 
             // Cột N - Số giải ngân đến cuối kỳ trước (Index 13)
             paidPrevious: numberOrZero(row[13]),
