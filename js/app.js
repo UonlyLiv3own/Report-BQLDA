@@ -142,7 +142,7 @@ function initOverview() {
     setText("totalPaid", `${formatMillion(total.paid)} Triệu`);
     setText("totalCommitment", `${formatMillion(total.commitment)} Triệu`);
     setText("totalCommitmentRate", total.commitment > 0 ? formatPercent(commitmentRate) : "—");
-    setText("totalRemaining", `${formatMillion(total.remaining)} Triệu`);
+    setText("totalRemaining", `${formatMillion(report.totalRemainingX12)} Triệu`);
     setText("totalRate", formatPercent(rate));
     setText("progressRate", formatPercent(rate));
     setText("periodPaid", `${formatMillion(total.period)} triệu`);

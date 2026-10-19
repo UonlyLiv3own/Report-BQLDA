@@ -222,6 +222,10 @@ export async function loadReportFromExcel() {
         : workbook.SheetNames[workbook.SheetNames.length - 1]; // Lấy sheet mới nhất ở cuối
 
     const sheet = workbook.Sheets[sheetName];
+    // Lấy trực tiếp giá trị ô X12 trong Excel
+    const totalRemainingX12 = numberOrZero(
+        sheet["X12"]?.v
+    );
 
     if (!sheet) {
         throw new Error("Không tìm thấy sheet trong file Excel.");
@@ -246,6 +250,7 @@ export async function loadReportFromExcel() {
         estimateMonth,
         unit: "triệu đồng",
         capitalDecision: decisionColumns,
+        totalRemainingX12,
         projects
     };
 }
