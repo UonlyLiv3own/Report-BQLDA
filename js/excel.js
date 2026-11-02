@@ -191,7 +191,9 @@ function normalizeRows(rows, decisionColumns) {
             officer: row[32] == null ? "" : String(row[32]).trim(),
 
             // Cột AH - Ghi chú (Index 33)
-            note: row[33] == null ? "" : String(row[33]).trim()
+            note: row[33] == null ? "" : String(row[33]).trim(),
+            // Cột AI - Hiện trạng hồ sơ (Index 34)
+            documentStatus: row[34] == null ? "" : String(row[34]).trim(),
         });
     }
 

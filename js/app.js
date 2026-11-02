@@ -343,6 +343,7 @@ function initDetail() {
     setText("detailEstimate", `${formatMillion(project.estimateMonth)} triệu`);
     setText("detailOfficer", project.officer || "—");
     setText("detailStatus", status.label);
+    setText("detailDocumentStatus",project.documentStatus || "Chưa cập nhật");
 
     const statusEl = document.getElementById("detailStatus");
     if (statusEl) statusEl.className = `status ${status.key}`;
